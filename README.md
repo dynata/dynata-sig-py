@@ -12,6 +12,14 @@ This library-only first pass implements:
 
 It does not include an HTTP client integration layer.
 
+## Credentials
+
+Before sending signed requests, obtain your credentials from Dynata:
+
+- **Access key**: used locally to compute the `dynata-signature` and also sent in the `dynata-access-key` request header.
+- **Secret key**: never sent as a header; used locally to compute the `dynata-signature`.
+
+
 ## Algorithm
 
 ### Generating Signing Strings
