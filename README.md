@@ -1,10 +1,6 @@
 # dynata-sig-py
 
-Python library for Dynata request-signing primitives.
-
-## Scope
-
-This library focuses on:
+Python library for Dynata request-signing primitives. It provides the following:
 
 - URL canonicalization for signing
 - Signing-string generation (`SHA256` lowercase hex of `METHOD + canonical_url + body`)
