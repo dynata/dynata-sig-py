@@ -4,7 +4,7 @@ Python library for Dynata request-signing primitives.
 
 ## Scope
 
-This library-only first pass implements:
+This library focuses on:
 
 - URL canonicalization for signing
 - Signing-string generation (`SHA256` lowercase hex of `METHOD + canonical_url + body`)
@@ -14,11 +14,36 @@ It does not include an HTTP client integration layer.
 
 ## Credentials
 
-Before sending signed requests, obtain your credentials from Dynata:
+Before sending signed requests you will need credentials for Dynata APIs. These consist of:
 
 - **Access key**: used locally to compute the `dynata-signature` and also sent in the `dynata-access-key` request header.
 - **Secret key**: never sent as a header; used locally to compute the `dynata-signature`.
 
+## Installation
+
+> [!NOTE]
+> Pending publishing of package to PyPI
+
+## Usage
+
+```python
+from dynata_sig import sign_request
+
+signed = sign_request(
+    method="POST",
+    url="https://example.dynata.com/authorize?b=2&b=1&a=9",
+    body="{}",
+    expiration="2025-12-31T23:59:59.000Z",
+    access_key="YOUR_ACCESS_KEY",
+    secret_key="YOUR_SECRET_KEY",
+)
+
+headers = {
+    "dynata-expiration": signed.dynata_expiration,
+    "dynata-access-key": signed.dynata_access_key,
+    "dynata-signature": signed.dynata_signature,
+}
+```
 
 ## Algorithm
 
@@ -57,11 +82,6 @@ Canonical query construction:
 
 Use the exact body text/bytes sent with the request. Whitespace, ordering, and encoding must be preserved exactly.
 
-### Notes
-
-- The final signing string digest is always a 64-character lowercase SHA-256 hex value.
-- If there is no body, use an empty body segment.
-
 ### Signature Computation
 
 After generating the signing string, compute the signature using a three-step HMAC-SHA256 chain:
@@ -72,32 +92,15 @@ After generating the signing string, compute the signature using a three-step HM
 
 Implementation notes:
 
+- The final signing string digest is always a 64-character lowercase SHA-256 hex value.
+- If there is no body, use an empty body segment.
 - Use UTF-8 for all key and message conversions.
 - Use lowercase hex output for each HMAC digest.
 - Reuse the exact RFC3339 expiration value from the `dynata-expiration` header.
 
-## Usage
+## Contribution Notes
 
-```python
-from dynata_sig import sign_request
-
-signed = sign_request(
-    method="POST",
-    url="https://example.dynata.com/authorize?b=2&b=1&a=9",
-    body="{}",
-    expiration="2025-12-31T23:59:59.000Z",
-    access_key="YOUR_ACCESS_KEY",
-    secret_key="YOUR_SECRET_KEY",
-)
-
-headers = {
-    "dynata-expiration": signed.dynata_expiration,
-    "dynata-access-key": signed.dynata_access_key,
-    "dynata-signature": signed.dynata_signature,
-}
-```
-
-## Run tests
+### Run tests
 
 ```bash
 python -m unittest discover -s tests -v
