@@ -8,19 +8,21 @@ Python library for Dynata request-signing primitives. It provides the following:
 
 It does not include an HTTP client integration layer.
 
-## Credentials
+
+## Getting Started
+
+### Credentials
 
 Before sending signed requests you will need credentials for Dynata APIs. These consist of:
 
 - **Access key**: used locally to compute the `dynata-signature` and also sent in the `dynata-access-key` request header.
 - **Secret key**: never sent as a header; used locally to compute the `dynata-signature`.
 
-## Installation
+### Installation
 
-> [!NOTE]
-> Pending publishing of package to PyPI
+`pip install git+https://github.com/dynata/dynata-sig-py`
 
-## Usage
+### Usage
 
 ```python
 from dynata_sig import sign_request
