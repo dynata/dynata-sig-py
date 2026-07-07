@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dynata-sig-py"
-version = "0.1.0"
+version = "1.0.0"
 description = "Dynata signing-string and signature primitives for Python."
 readme = "README.md"
 requires-python = ">=3.10"
