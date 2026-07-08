@@ -15,7 +15,6 @@ def build_canonical_url(raw_url: str) -> str:
     Behavior follows dynata-sig-java / dynata-sig-go:
     - split by first "?"
     - normalize path
-    - parse only query pairs containing "="
     - keep the last value for duplicate keys
     - decode and then RFC3986-encode query key/value
     - sort keys lexicographically
@@ -81,9 +80,12 @@ def _percent_encode_rfc3986(value: str) -> str:
 def _build_canonical_query_string(raw_query: str) -> str:
     values_by_key: dict[str, str] = {}
     for pair in raw_query.split("&"):
+        if pair.strip() == "":
+            continue
         eq_idx = pair.find("=")
         if eq_idx < 0:
-            continue
+            pair = pair + "="
+            eq_idx = len(pair) - 1
         key = pair[:eq_idx]
         value = pair[eq_idx + 1 :]
         values_by_key[key] = value

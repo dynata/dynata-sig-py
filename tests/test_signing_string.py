@@ -26,6 +26,12 @@ class CanonicalUrlTests(unittest.TestCase):
     def test_encodes_query_and_keeps_last_duplicate_value(self) -> None:
         self.assertEqual(
             "https://example.com?a%5B%5D=2&b=3&empty=",
+            build_canonical_url("https://example.com?a[]=1&a[]=2&b=3&empty="),
+        )
+
+    def test_encodes_query_and_keeps_parameter_without_value(self) -> None:
+        self.assertEqual(
+            "https://example.com?a%5B%5D=2&b=3&empty=&flag=",
             build_canonical_url("https://example.com?a[]=1&a[]=2&b=3&empty=&flag"),
         )
 
