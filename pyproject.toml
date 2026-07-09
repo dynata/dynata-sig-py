@@ -3,7 +3,7 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "dynata-sig-py"
+name = "dynata-sig"
 version = "1.0.0"
 description = "Dynata signing-string and signature primitives for Python."
 readme = "README.md"

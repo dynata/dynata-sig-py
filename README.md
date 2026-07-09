@@ -21,7 +21,7 @@ Before sending signed requests you will need credentials for Dynata APIs. These 
 ### Installation
 
 ```bash
-pip install git+https://github.com/dynata/dynata-sig-py@1.0.0
+pip install git+https://github.com/dynata/dynata-sig-py
 ```
 
 ### Usage
