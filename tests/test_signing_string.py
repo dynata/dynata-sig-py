@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 import sys
+import textwrap
 import unittest
 
 # Allow `python -m unittest discover -s tests -v` without PYTHONPATH.
@@ -80,6 +81,59 @@ class SigningStringTests(unittest.TestCase):
                 "https://example.dynata.com/authorize",
                 "{}",
             ),
+        )
+
+    def test_get_with_query_params_and_no_body_vector(self) -> None:
+        url = "https://example.dynata.com/?key=value&another=something"
+        self.assertEqual(
+            "https://example.dynata.com/?another=something&key=value",
+            build_canonical_url(url),
+        )
+        self.assertEqual(
+            "0750c6716be4efcabf0c5e4c98157340e224ae3f00336654dc8061f17943a575",
+            generate_signing_string("GET", url, ""),
+        )
+
+    def test_post_with_complicated_query_and_body_vector(self) -> None:
+        url = (
+            "https://example.dynata.com/"
+            "?ctx=context123&respondent_id=user123&language=en"
+            "&expiration=2021-10-19T17:48:36.480Z&access_key=1234"
+            "&Zeta=encode €xample~v@lue&dupes=1&doubled=this=two&dupes=2&null=&"
+        )
+        body = textwrap.dedent(
+            """\
+            [
+              {
+                "id": 1234,
+                "values": [
+                  {
+                    "key": "key",
+                    "value": "value"
+                  }
+                ]
+              },
+              {
+                "id": 4567,
+                "values": [
+                  {
+                    "key": "key",
+                    "value": "value"
+                  }
+                ]
+              }
+            ]"""
+        )
+        self.assertEqual(
+            "https://example.dynata.com/?Zeta=encode%20%E2%82%ACxample~v%40lue"
+            "&access_key=1234&ctx=context123&doubled=this%3Dtwo&dupes=2"
+            "&expiration=2021-10-19T17%3A48%3A36.480Z&language=en&null="
+            "&respondent_id=user123",
+            build_canonical_url(url),
+        )
+        self.assertEqual(
+            "3749ccdac3e0a8393df061a769e6f919125fea94cfd67a635ba3d7e1a3846f4d",
+            generate_signing_string("POST", url, body),
         )
 
 
